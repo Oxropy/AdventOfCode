@@ -6,4 +6,8 @@ abstract class AoCApp {
 
     val inputLines: List<String>
         get() = input.split("\n").map { it.trim() }
+
+    fun printPart(part: Int, result: String) {
+        println("Part $part:  $result")
+    }
 }

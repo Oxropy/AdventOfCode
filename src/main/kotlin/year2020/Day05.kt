@@ -5,8 +5,8 @@ import AoCApp
 object Day05: AoCApp() {
     @JvmStatic
     fun main(args: Array<String>) {
-//        println(part1(inputLines))
-        println(part2(inputLines))
+        printPart(1, part1(inputLines))
+        printPart(2, part2(inputLines))
     }
 
     private fun part1(lines: List<String>): String {
@@ -14,7 +14,7 @@ object Day05: AoCApp() {
     }
 
     private fun part2(lines: List<String>): String {
-        return lines.map { calcSeatId(it) }.sorted().windowed(size = 2, step = 1).first { it[0] + 1 != it[1] }.toString()
+        return (lines.map { calcSeatId(it) }.sorted().windowed(size = 2, step = 1).first { it[0] + 1 != it[1] }[0] + 1).toString()
     }
 
     private fun calcSeatId(input: String): Int {

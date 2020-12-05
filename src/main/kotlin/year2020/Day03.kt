@@ -7,8 +7,8 @@ object Day03 : AoCApp() {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        println(part1(inputLines))
-        println(part2(inputLines))
+        printPart(1, part1(inputLines))
+        printPart(2, part2(inputLines))
     }
 
     private fun part1(lines: List<String>): String {
