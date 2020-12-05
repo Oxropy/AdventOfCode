@@ -88,8 +88,7 @@ object Day04 : AoCApp() {
     }
 
     private fun validateHeight(height: String): Boolean {
-        val system = height.takeLast(2)
-        return when (system) {
+        return when (height.takeLast(2)) {
             "cm" -> isInputNumberAndInRange(height.take(height.length - 2), 150, 193)
             "in" -> isInputNumberAndInRange(height.take(height.length - 2), 59, 76)
             else -> false

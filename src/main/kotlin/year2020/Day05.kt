@@ -37,7 +37,4 @@ object Day05: AoCApp() {
                 else -> unreachable()
             } }.toCharArray()), 2)
     }
-
-    fun unreachable(): Nothing = throw Exception("Should not be reachable!")
-
 }

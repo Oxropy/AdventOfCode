@@ -26,6 +26,23 @@ object Day03 : AoCApp() {
         )).toString()
     }
 
+    private fun checkSlops(grid: List<String>, slopes: List<Pair<Int, Int>>): Long {
+        val width = grid.first().length
+
+        return slopes
+            .map { (dx, dy) -> checkTrees(grid, width, 0, 0, dx, dy, 0) }
+            .fold(1) { a, b -> a * b }
+    }
+
+    private tailrec fun checkTrees(grid: List<String>, width: Int, x: Int, y: Int, dx: Int, dy: Int, trees: Long): Long {
+        if (y >= grid.size) {
+            return trees
+        }
+        val change = if (grid[y][x] == tree) 1 else 0
+
+        return checkTrees(grid, width, (x + dx).let { if (x >= width) it - width else it }, y + dy, dx, dy, trees + change)
+    }
+
     private fun hitTreesWithSlopes(lines: List<String>, right: Int, down: Int): Long {
         val width = lines[0].length
 
@@ -56,23 +73,6 @@ object Day03 : AoCApp() {
             goneDown++
         }
         return result
-    }
-
-    private fun checkSlops(grid: List<String>, slopes: List<Pair<Int, Int>>): Long {
-        val width = grid.first().length
-
-        return slopes
-            .map { (dx, dy) -> checkTrees(grid, width, 0, 0, dx, dy, 0) }
-            .fold(1) { a, b -> a * b }
-    }
-
-    private tailrec fun checkTrees(grid: List<String>, width: Int, x: Int, y: Int, dx: Int, dy: Int, trees: Long): Long {
-        if (y >= grid.size) {
-            return trees
-        }
-        val change = if (grid[y][x] == tree) 1 else 0
-
-        return checkTrees(grid, width, (x + dx).let { if (x >= width) it - width else it }, y + dy, dx, dy, trees + change)
     }
 
     private fun hitTrees(lines: List<String>, right: Int, down: Int): Long {
