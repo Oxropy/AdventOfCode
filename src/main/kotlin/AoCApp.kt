@@ -9,6 +9,9 @@ abstract class AoCApp {
     val inputLines: List<String>
         get() = input.split("\n").map { it.trim() }
 
+    val inputGroupedLines: List<List<String>>
+        get() = input.split("\r\n\r\n").map { group -> group.split("\n").map { it.trim() } }
+
     fun printPart(part: Int, result: String) {
         println("Part $part:  $result")
     }
