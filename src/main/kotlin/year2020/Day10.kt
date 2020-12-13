@@ -17,7 +17,17 @@ object Day10 : AoCApp() {
     }
 
     private fun part2(lines: List<Int>): String {
-        TODO("Not yet implemented")
+        val sortedLines = listOf(0) + lines.sorted()
+        val maxDifference = 3
+        return findAllCombinations(
+            sortedLines,
+            0,
+            0,
+            maxDifference,
+            sortedLines.last() + maxDifference,
+            sortedLines.count(),
+            mutableMapOf()
+        ).toString()
     }
 
     private fun processInput(lines: List<String>): List<Int> {
@@ -26,5 +36,44 @@ object Day10 : AoCApp() {
 
     private fun countByDiff(pairList: List<Pair<Int, Int>>, n: Int): Int {
         return pairList.count { it.second - it.first == n }
+    }
+
+    private fun findAllCombinations(
+        lines: List<Int>,
+        index: Int,
+        lastValue: Int,
+        maxDifference: Int,
+        endValue: Int,
+        linesCount: Int,
+        cache: MutableMap<Int, Long>
+    ): Long {
+        if (index >= linesCount) {
+            if (index == linesCount && endValue - lastValue in 1..maxDifference) {
+                return 1
+            }
+
+            return 0
+        }
+
+        val value = lines[index]
+        if (value - lastValue > maxDifference) {
+            return 0
+        }
+
+        val cachedValue = cache[value]
+        if (cachedValue != null) {
+            return cachedValue
+        }
+
+        var count = 0L
+        for (i in 1..maxDifference) {
+            val nextIndex = index + i
+            count += findAllCombinations(lines, nextIndex, value, maxDifference, endValue, linesCount, cache)
+        }
+
+        cache[value] = count
+        println("$value: $count")
+
+        return count
     }
 }
