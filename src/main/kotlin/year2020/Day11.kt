@@ -146,10 +146,4 @@ object Day11 : AoCApp() {
     private fun getPositionValue(position: Point, seats: List<List<Char>>): Char {
         return seats[position.y][position.x]
     }
-
-    data class Point(val x: Int, val y: Int)
-
-    operator fun Point.plus(o: Point): Point {
-        return Point(x + o.x, y + o.y)
-    }
 }

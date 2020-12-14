@@ -1,3 +1,4 @@
+import year2020.Day11
 import java.nio.charset.StandardCharsets.UTF_8
 
 abstract class AoCApp {
@@ -15,4 +16,14 @@ abstract class AoCApp {
     fun printPart(part: Int, result: String) {
         println("Part $part:  $result")
     }
+
+    operator fun Point.plus(o: Point): Point {
+        return Point(x + o.x, y + o.y)
+    }
+
+    operator fun Point.times(n: Int): Point {
+        return Point(x * n, y * n)
+    }
+
+    data class Point(val x: Int, val y: Int)
 }
