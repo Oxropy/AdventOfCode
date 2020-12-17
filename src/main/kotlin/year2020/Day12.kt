@@ -3,12 +3,37 @@ package year2020
 import AoCApp
 import kotlin.math.abs
 
+sealed class Instr {
+    data class Move(val direction: AoCApp.Point) : Instr()
+    data class Rotate(val degree: Int) : Instr()
+    data class MoveForward(val n: Int) : Instr()
+}
+
 object Day12 : AoCApp() {
     @JvmStatic
     fun main(args: Array<String>) {
         val instructions = parseInput(inputLines)
         printPart(1, part1(instructions))
         printPart(2, part2(instructions))
+    }
+
+    private fun parseInput(input: List<String>): List<Instr> {
+        val regex = Regex("""(\w)(\d+)""")
+        return input.mapNotNull { line ->
+            regex.find(line)?.let {
+                val (action, value) = it.destructured
+                when (action.first()) {
+                    'N' -> Instr.Move(Point(0, value.toInt()))
+                    'S' -> Instr.Move(Point(0, -value.toInt()))
+                    'E' -> Instr.Move(Point(value.toInt(), 0))
+                    'W' -> Instr.Move(Point(-value.toInt(), 0))
+                    'L' -> Instr.Rotate(-value.toInt())
+                    'R' -> Instr.Rotate(value.toInt())
+                    'F' -> Instr.MoveForward(value.toInt())
+                    else -> unreachable()
+                }
+            }
+        }
     }
 
     private fun part1(instructions: List<Instr>): String {

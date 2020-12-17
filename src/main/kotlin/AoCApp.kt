@@ -2,7 +2,6 @@ import year2020.Day11
 import java.nio.charset.StandardCharsets.UTF_8
 
 abstract class AoCApp {
-    fun unreachable(): Nothing = throw Exception("Should not be reachable!")
 
     val input: String
         get() = String(javaClass.getResourceAsStream("${javaClass.simpleName}.txt").readBytes(), UTF_8)
@@ -26,4 +25,8 @@ abstract class AoCApp {
     }
 
     data class Point(val x: Int, val y: Int)
+
+    companion object {
+        fun unreachable(): Nothing = throw Exception("Should not be reachable!")
+    }
 }
