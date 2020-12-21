@@ -36,31 +36,30 @@ object Day13 : AoCApp() {
     }
 
     private fun part2(busLines: List<BusId.Bus>): String {
-        val highestBus = busLines.maxByOrNull { bus -> bus.id }!!
-        val timestamp = (100000000000000L / highestBus.id) * highestBus.id
-//        val timestamp = highestBus.id.toLong()
-        return findEarliestTimestamp(busLines, timestamp, highestBus).toString()
+        val timestamp = 100000000000000L
+//        val timestamp = busLines[0].id.toLong()
+        return findEarliestTimestamp(busLines, timestamp, busLines.count(),  0).toString()
     }
 
-    private tailrec fun findEarliestTimestamp(busLines: List<BusId.Bus>, timestampAfterLast: Long, highestBus: BusId.Bus): Long {
-        val timestamp = timestampAfterLast - highestBus.minutesAfterTimestamp
-        if (checkBusLinesOnTimestamp(busLines, timestamp, 0)) {
-            return timestamp
+    private tailrec fun findEarliestTimestamp(
+        busLines: List<BusId.Bus>, timestamp: Long, busLineCount: Int, index: Int
+    ): Long {
+        val busLine = busLines[index]
+        val normalizedTimestamp = timestamp + busLine.minutesAfterTimestamp
+        var newTimestamp = (normalizedTimestamp / busLine.id) * busLine.id
+        if (newTimestamp < normalizedTimestamp) {
+           newTimestamp += busLine.id
+        }
+        if (newTimestamp == normalizedTimestamp || index == 0) {
+            newTimestamp -= busLine.minutesAfterTimestamp
+            val newIndex = index + 1
+            if (newIndex == busLineCount) {
+                return timestamp
+            }
+
+            return findEarliestTimestamp(busLines, newTimestamp, busLineCount, newIndex)
         }
 
-        return findEarliestTimestamp(busLines, timestampAfterLast + highestBus.id, highestBus)
-    }
-
-    private tailrec fun checkBusLinesOnTimestamp(busLines: List<BusId.Bus>, timestamp: Long, index: Int): Boolean {
-        if (index >= busLines.count()) {
-            return true
-        }
-
-        val (id, minutesAfterTimestamp) = busLines[index]
-        if ((timestamp + minutesAfterTimestamp) % id != 0L) {
-            return false
-        }
-
-        return checkBusLinesOnTimestamp(busLines, timestamp, index + 1)
+        return findEarliestTimestamp(busLines, newTimestamp, busLineCount, 0)
     }
 }
