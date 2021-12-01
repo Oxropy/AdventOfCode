@@ -1,10 +1,9 @@
-import year2020.Day11
-import java.nio.charset.StandardCharsets.UTF_8
+import java.io.IOException
 
 abstract class AoCApp {
 
-    val input: String
-        get() = String(javaClass.getResourceAsStream("${javaClass.simpleName}.txt").readBytes(), UTF_8)
+    private val input: String
+        get() = javaClass.getResourceAsStream("${javaClass.simpleName}.txt")?.readBytes()?.let { String(it, Charsets.UTF_8) } ?: throw IOException("File not found!")
 
     val inputLines: List<String>
         get() = input.split("\n").map { it.trim() }
