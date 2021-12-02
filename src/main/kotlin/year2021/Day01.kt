@@ -22,6 +22,6 @@ object Day01 : AoCApp() {
         lines.windowed(2).count { it[1] > it[0] }
 
     private fun processInput(inputLines: List<String>): List<Int> {
-        return inputLines.map { l -> l.toInt() }
+        return inputLines.map { it.toInt() }
     }
 }
