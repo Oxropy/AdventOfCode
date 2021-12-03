@@ -11,13 +11,19 @@ object Day02 : AoCApp() {
     }
 
     private fun part1(input: List<DirectionWithValue>): String {
-        return input.fold(Point(0, 0)) { acc, value -> acc.plus(value.getDirectionValue()) }.let { (horizontal, depth) -> horizontal * depth }.toString()
+        return input.fold(Point(0, 0)) { acc, value -> acc.plus(value.getDirectionValue()) }
+            .let { (horizontal, depth) -> horizontal * depth }.toString()
     }
 
     private fun part2(input: List<DirectionWithValue>): String {
-        return calculateWithAim(Point(0, 0), 0, input, 0).let { (horizontal, depth) -> horizontal * depth }.toString()
+        return input.fold(PositionValues(Point(0, 0), 0)) { acc, value ->
+            PositionValues(
+                calculatePosition(value, acc),
+                calculateAim(value, acc.aim)
+            )
+        }
+            .let { (position, _) -> position.x * position.y }.toString()
     }
-
 
     private fun processInput(inputLines: List<String>): List<DirectionWithValue> {
         return inputLines.map { l ->
@@ -33,26 +39,41 @@ object Day02 : AoCApp() {
     }
 
     private data class DirectionWithValue(val direction: Direction, val units: Int) {
-        fun getDirectionValue() : Point {
+        fun getDirectionValue(): Point {
             return direction.vector.times(units)
         }
     }
 
-    private fun calculateWithAim(position: Point, aim: Int, directions: List<DirectionWithValue>, index: Int) : Point {
-        if (index >= directions.size) {
-            return position
+    private data class PositionValues(val position: Point, val aim: Int)
+
+    private fun calculateAim(directionWithValue: DirectionWithValue, aim: Int): Int {
+        val (direction, units) = directionWithValue
+        return when (direction) {
+            Direction.UP -> {
+                aim - units
+            }
+            Direction.DOWN -> {
+                aim + units
+            }
+            else -> {
+                aim
+            }
         }
+    }
 
-        val (direction, units) = directions[index]
-
-        var newAim = aim
-        var newPosition = position
-        when (direction) {
-            Direction.UP -> { newAim = aim - units }
-            Direction.FORWARD -> { newPosition = position + Point(0, units * aim) + direction.vector * units }
-            Direction.DOWN -> { newAim = aim + units }
+    private fun calculatePosition(directionWithValue: DirectionWithValue, positionValues: PositionValues): Point {
+        val (direction, units) = directionWithValue
+        val (position, aim) = positionValues
+        return when (direction) {
+            Direction.FORWARD -> {
+                position + Point(
+                    0,
+                    units * aim
+                ) + direction.vector * units
+            }
+            else -> {
+                position
+            }
         }
-
-        return calculateWithAim(newPosition, newAim, directions, index + 1)
     }
 }
