@@ -23,7 +23,15 @@ abstract class AoCApp {
         return Point(x * n, y * n)
     }
 
-    data class Point(val x: Int, val y: Int)
+    data class Point(val x: Int, val y: Int){
+        fun setX(x: Int): Point {
+            return Point(x, y)
+        }
+
+        fun setY(y: Int): Point {
+            return Point(x, y)
+        }
+    }
 
     companion object {
         fun unreachable(): Nothing = throw Exception("Should not be reachable!")
