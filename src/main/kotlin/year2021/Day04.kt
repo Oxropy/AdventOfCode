@@ -7,7 +7,7 @@ object Day04 : AoCApp() {
     fun main(args: Array<String>) {
         val input = processInput(inputGroupedLines)
         printPart(1, part1(input.first, input.second))
-//        printPart(2, part2(input))
+        printPart(2, part2(input.first, input.second))
     }
 
     private fun processInput(inputLines: List<List<String>>): Pair<List<Int>, List<List<List<BingoNumber>>>> {
@@ -22,10 +22,7 @@ object Day04 : AoCApp() {
 
     private fun part1(numbers: List<Int>, boards: List<List<List<BingoNumber>>>): String {
         for (number in numbers) {
-            boards.forEach { board -> board.forEach { value -> value.forEach { item ->
-                if (item.number == number) {
-                    item.isDrawn = true
-                } } } }
+            setNumberInBoards(boards, number)
 
             val (isBingo, values) = isBingoBoards(boards)
             if (isBingo) {
@@ -34,6 +31,39 @@ object Day04 : AoCApp() {
         }
 
         return ""
+    }
+
+    private fun part2(numbers: List<Int>, boards: List<List<List<BingoNumber>>>): String {
+
+        var activeBoards = boards
+        for (number in numbers) {
+            setNumberInBoards(activeBoards, number)
+
+            val newActiveBoards = activeBoards.filter { !isBingoBoard(it).first }
+
+            if (newActiveBoards.isEmpty()) {
+                return (activeBoards[0].flatten().filter{ !it.isDrawn }.map { value -> value.number }.sum() * number).toString()
+            }
+
+            activeBoards = newActiveBoards
+        }
+
+        return ""
+    }
+
+    private fun setNumberInBoards(
+        boards: List<List<List<BingoNumber>>>,
+        number: Int
+    ) {
+        boards.forEach { board ->
+            board.forEach { value ->
+                value.forEach { item ->
+                    if (item.number == number) {
+                        item.isDrawn = true
+                    }
+                }
+            }
+        }
     }
 
     private fun isBingoBoards(boards: List<List<List<BingoNumber>>>): Pair<Boolean, List<Int>> {
