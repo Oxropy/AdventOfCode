@@ -2,7 +2,7 @@ import java.io.IOException
 
 abstract class AoCApp {
 
-    private val input: String
+    val input: String
         get() = javaClass.getResourceAsStream("${javaClass.simpleName}.txt")?.readBytes()?.let { String(it, Charsets.UTF_8) } ?: throw IOException("File not found!")
 
     val inputLines: List<String>
