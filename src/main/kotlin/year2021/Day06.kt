@@ -15,46 +15,38 @@ object Day06: AoCApp() {
     }
 
     private fun part2(input: List<Lanternfish>): String {
-        TODO("Not yet implemented")
+        return simulate(0,256, input).toString()
     }
 
     private fun processInput(input: String): List<Lanternfish> {
-        return input.split(',').map { Lanternfish(it.toInt()) }
+        return input.split(',').map { it.toInt() }.groupingBy { it }.eachCount().map { Lanternfish(it.key, it.value.toLong()) }
     }
 
-    private fun simulate(currentDay: Int, days: Int, fishes: List<Lanternfish>): Int {
-//        println("After $currentDay days: $fishes")
-
+    private fun simulate(currentDay: Int, days: Int, fishes: List<Lanternfish>): Long {
         if (currentDay >= days) {
-            return fishes.size
+            return fishes.sumOf { it.occurrence }
         }
 
-        return simulate(currentDay + 1, days, fishes.flatMap { it.dayPast() })
+        val newFishes = fishes.mapNotNull { it.dayPast() }
+        val newSchool = (fishes + newFishes).groupBy { it.daysLeft }.map { fishAge -> Lanternfish(fishAge.key, fishAge.value.sumOf { it.occurrence }) }
+
+        return simulate(currentDay + 1, days, newSchool)
     }
 
-    private class Lanternfish(val daysLeft: Int)
+    private class Lanternfish(var daysLeft: Int, var occurrence: Long)
     {
-        fun dayPast(): List<Lanternfish> {
-            val isDayLeft = daysLeft == 0
-            val updated = reduceDaysLeft(isDayLeft)
-
-            if (isDayLeft) {
-                return listOf(updated, Lanternfish(8))
-            }
-
-            return listOf(updated)
-        }
-
-        private fun reduceDaysLeft(isDayLeft: Boolean): Lanternfish {
-            return if (isDayLeft) {
-                Lanternfish(6)
+        fun dayPast(): Lanternfish? {
+            return if (daysLeft == 0) {
+                daysLeft = 6
+                Lanternfish(8, occurrence)
             } else {
-                Lanternfish(daysLeft - 1)
+                daysLeft -= 1
+                null
             }
         }
 
         override fun toString(): String {
-            return daysLeft.toString()
+            return "$daysLeft occurred $occurrence"
         }
     }
 }
