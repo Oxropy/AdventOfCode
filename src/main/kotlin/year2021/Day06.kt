@@ -27,21 +27,31 @@ object Day06: AoCApp() {
             return fishes.sumOf { it.occurrence }
         }
 
-        val newFishes = fishes.mapNotNull { it.dayPast() }
-        val newSchool = (fishes + newFishes).groupBy { it.daysLeft }.map { fishAge -> Lanternfish(fishAge.key, fishAge.value.sumOf { it.occurrence }) }
+        val newSchool = fishes.flatMap { it.dayPast() }
+            .groupBy { it.daysLeft }
+            .map { fishAge -> Lanternfish(fishAge.key, fishAge.value.sumOf { it.occurrence }) }
 
         return simulate(currentDay + 1, days, newSchool)
     }
 
-    private class Lanternfish(var daysLeft: Int, var occurrence: Long)
+    private class Lanternfish(val daysLeft: Int, val occurrence: Long)
     {
-        fun dayPast(): Lanternfish? {
-            return if (daysLeft == 0) {
-                daysLeft = 6
-                Lanternfish(8, occurrence)
+        fun dayPast(): List<Lanternfish> {
+            val isDayLeft = daysLeft == 0
+            val updated = reduceDaysLeft(isDayLeft)
+
+            if (isDayLeft) {
+                return listOf(updated, Lanternfish(8, occurrence))
+            }
+
+            return listOf(updated)
+        }
+
+        private fun reduceDaysLeft(isDayLeft: Boolean): Lanternfish {
+            return if (isDayLeft) {
+                Lanternfish(6, occurrence)
             } else {
-                daysLeft -= 1
-                null
+                Lanternfish(daysLeft - 1, occurrence)
             }
         }
 
