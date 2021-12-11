@@ -8,7 +8,8 @@ object Day11 : AoCApp() {
     fun main(args: Array<String>) {
         val input = processInput(inputLines)
         printPart(1, part1(input))
-        printPart(2, part2(input))
+        val input2 = processInput(inputLines)
+        printPart(2, part2(input2))
     }
 
     private fun part1(input: Map<Point, EnergyCounter>): String {
@@ -17,7 +18,13 @@ object Day11 : AoCApp() {
     }
 
     private fun part2(input: Map<Point, EnergyCounter>): String {
-        TODO("Not yet implemented")
+        val mutableMap = input.toMutableMap()
+        var step = 1
+        while (doStep(mutableMap) != 100) {
+            step++
+        }
+
+        return step.toString()
     }
 
     private fun processInput(inputLines: List<String>): Map<Point, EnergyCounter> {
@@ -54,7 +61,7 @@ object Day11 : AoCApp() {
     }
 
     private data class EnergyCounter(var energy: Int, var hasFlashed: Boolean) {
-        constructor(energy: Int): this(energy, false)
+        constructor(energy: Int) : this(energy, false)
 
         fun reset(): Boolean {
             return if (hasFlashed) {
@@ -78,23 +85,5 @@ object Day11 : AoCApp() {
                 false
             }
         }
-
-        fun getPrintValue(): String {
-            return if (hasFlashed) {
-                "X"
-            } else {
-                energy.toString()
-            }
-        }
-    }
-
-    private fun printMap(input: Map<Point, EnergyCounter>) {
-        for (y in 0..9) {
-            for (x in 0..9) {
-                print(input[Point(x, y)]!!.getPrintValue())
-            }
-            println()
-        }
-        println()
     }
 }
