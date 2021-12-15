@@ -11,12 +11,15 @@ object Day13 : AoCApp() {
     }
 
     private fun part1(input: Pair<List<Point>, List<FoldAlong>>): String {
-        val (points, foldAlongs) = input
-        return foldAlong(points, foldAlongs[0]).size.toString()
+        val (points, foldAlong) = input
+        return foldAlong(points, foldAlong[0]).size.toString()
     }
 
     private fun part2(input: Pair<List<Point>, List<FoldAlong>>): String {
-        TODO("Not yet implemented")
+        val (points, foldAlong) = input
+        val result = foldAlong.fold(points) { p, fold -> foldAlong(p, fold) }
+        printFold(result, FoldAlong.NoFold)
+        return ""
     }
 
     private fun processInput(inputLines: List<List<String>>): Pair<List<Point>, List<FoldAlong>> {
@@ -40,6 +43,7 @@ object Day13 : AoCApp() {
     sealed class FoldAlong {
         class AlongX(val column: Int) : FoldAlong()
         class AlongY(val row: Int) : FoldAlong()
+        object NoFold : FoldAlong()
     }
 
     private fun foldAlong(points: List<Point>, fold: FoldAlong): List<Point> {
@@ -49,6 +53,9 @@ object Day13 : AoCApp() {
             }
             is FoldAlong.AlongY -> {
                 foldAlongY(points, fold.row)
+            }
+            is FoldAlong.NoFold -> {
+                points
             }
         }
     }
