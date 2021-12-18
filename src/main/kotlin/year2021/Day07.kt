@@ -2,7 +2,7 @@ package year2021
 
 import AoCApp
 
-object Day07: AoCApp() {
+object Day07 : AoCApp() {
     @JvmStatic
     fun main(args: Array<String>) {
         val input = processInput(input)
@@ -14,14 +14,14 @@ object Day07: AoCApp() {
         val minValue = input.minOf { it }
         val average = input.sum() / input.size
 
-        return (minValue .. average).minOf { calculateMovementCost(input, it){ v -> v } }.toString()
+        return (minValue..average).minOf { calculateMovementCost(input, it) { v -> v } }.toString()
     }
 
     private fun part2(input: List<Int>): String {
         val minValue = input.minOf { it }
         val average = input.sum() / input.size
 
-        return (minValue .. average).minOf { calculateMovementCost(input, it){ v -> (v * (v + 1)) / 2 } }.toString()
+        return (minValue..average).minOf { calculateMovementCost(input, it) { v -> (v * (v + 1)) / 2 } }.toString()
     }
 
     private fun processInput(lines: String): List<Int> {

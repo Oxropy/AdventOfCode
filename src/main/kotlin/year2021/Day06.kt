@@ -2,7 +2,7 @@ package year2021
 
 import AoCApp
 
-object Day06: AoCApp() {
+object Day06 : AoCApp() {
     @JvmStatic
     fun main(args: Array<String>) {
         val input = processInput(input)
@@ -11,15 +11,16 @@ object Day06: AoCApp() {
     }
 
     private fun part1(input: List<Lanternfish>): String {
-        return simulate(0,80, input).toString()
+        return simulate(0, 80, input).toString()
     }
 
     private fun part2(input: List<Lanternfish>): String {
-        return simulate(0,256, input).toString()
+        return simulate(0, 256, input).toString()
     }
 
     private fun processInput(input: String): List<Lanternfish> {
-        return input.split(',').map { it.toInt() }.groupingBy { it }.eachCount().map { Lanternfish(it.key, it.value.toLong()) }
+        return input.split(',').map { it.toInt() }.groupingBy { it }.eachCount()
+            .map { Lanternfish(it.key, it.value.toLong()) }
     }
 
     private fun simulate(currentDay: Int, days: Int, fishes: List<Lanternfish>): Long {
@@ -34,8 +35,7 @@ object Day06: AoCApp() {
         return simulate(currentDay + 1, days, newSchool)
     }
 
-    private class Lanternfish(val daysLeft: Int, val occurrence: Long)
-    {
+    private class Lanternfish(val daysLeft: Int, val occurrence: Long) {
         fun dayPast(): List<Lanternfish> {
             val isDayLeft = daysLeft == 0
             val updated = reduceDaysLeft(isDayLeft)

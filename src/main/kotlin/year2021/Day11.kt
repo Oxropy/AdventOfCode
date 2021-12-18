@@ -13,14 +13,12 @@ object Day11 : AoCApp() {
     }
 
     private fun part1(input: Map<Point, EnergyCounter>): String {
-        val mutableMap = input.toMutableMap()
-        return (1..100).sumOf { doStep(mutableMap) }.toString()
+        return (1..100).sumOf { doStep(input) }.toString()
     }
 
     private fun part2(input: Map<Point, EnergyCounter>): String {
-        val mutableMap = input.toMutableMap()
         var step = 1
-        while (doStep(mutableMap) != 100) {
+        while (doStep(input) != 100) {
             step++
         }
 
@@ -44,7 +42,7 @@ object Day11 : AoCApp() {
         Point(-1, 1), Point(0, 1), Point(1, 1)
     )
 
-    private fun doStep(dumboMap: MutableMap<Point, EnergyCounter>): Int {
+    private fun doStep(dumboMap: Map<Point, EnergyCounter>): Int {
         dumboMap.values.forEach { it.add() }
 
         var flashed = dumboMap.filter { it.value.flash() }

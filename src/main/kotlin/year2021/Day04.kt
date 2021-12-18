@@ -42,7 +42,8 @@ object Day04 : AoCApp() {
             val newActiveBoards = activeBoards.filter { !isBingoBoard(it).first }
 
             if (newActiveBoards.isEmpty()) {
-                return (activeBoards[0].flatten().filter{ !it.isDrawn }.map { value -> value.number }.sum() * number).toString()
+                return (activeBoards[0].flatten().filter { !it.isDrawn }
+                    .sumOf { value -> value.number } * number).toString()
             }
 
             activeBoards = newActiveBoards
@@ -89,7 +90,7 @@ object Day04 : AoCApp() {
     private fun isBingoRows(board: List<List<BingoNumber>>): Pair<Boolean, List<Int>> {
         for (row in board) {
             if (isBingo(row)) {
-                val unmarkedNumbers = board.flatten().filter{ !it.isDrawn }.map { value -> value.number }
+                val unmarkedNumbers = board.flatten().filter { !it.isDrawn }.map { value -> value.number }
                 return Pair(true, unmarkedNumbers)
             }
         }
@@ -102,7 +103,7 @@ object Day04 : AoCApp() {
         for (i in 0 until board[0].size) {
             val col = board.map { it[i] }
             if (isBingo(col)) {
-                val unmarkedNumbers = board.flatten().filter{ !it.isDrawn }.map { value -> value.number }
+                val unmarkedNumbers = board.flatten().filter { !it.isDrawn }.map { value -> value.number }
                 return Pair(true, unmarkedNumbers)
             }
         }

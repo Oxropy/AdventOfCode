@@ -2,7 +2,7 @@ package year2021
 
 import AoCApp
 
-object Day14: AoCApp() {
+object Day14 : AoCApp() {
     @JvmStatic
     fun main(args: Array<String>) {
         val input = processInput(inputGroupedLines)

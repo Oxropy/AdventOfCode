@@ -61,15 +61,17 @@ object Day13 : AoCApp() {
     }
 
     private fun foldAlongX(points: List<Point>, column: Int): List<Point> {
-        val (rightSide, leftSide) = points.partition { it.x > column }
-        val foldedPoints = rightSide.map { Point(it.x - ((it.x - column) * 2), it.y) }
-        return (leftSide + foldedPoints).distinct()
+        return points.partition { it.x > column }.let { (rightSide, leftSide) ->
+            val foldedPoints = rightSide.map { Point(it.x - ((it.x - column) * 2), it.y) }
+            (leftSide + foldedPoints).distinct()
+        }
     }
 
     private fun foldAlongY(points: List<Point>, row: Int): List<Point> {
-        val (downSide, upSide) = points.partition { it.y > row }
-        val foldedPoints = downSide.map { Point(it.x, it.y - ((it.y - row) * 2)) }
-        return (upSide + foldedPoints).distinct()
+        return points.partition { it.y > row }.let { (downSide, upSide) ->
+            val foldedPoints = downSide.map { Point(it.x, it.y - ((it.y - row) * 2)) }
+            (upSide + foldedPoints).distinct()
+        }
     }
 
     private fun printFold(points: List<Point>, fold: FoldAlong) {

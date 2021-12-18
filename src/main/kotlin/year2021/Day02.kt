@@ -11,7 +11,7 @@ object Day02 : AoCApp() {
     }
 
     private fun part1(input: List<DirectionWithValue>): String {
-        return input.fold(Point(0, 0)) { acc, value -> acc.plus(value.getDirectionValue()) }
+        return input.fold(Point(0, 0)) { acc, value -> acc + value.getDirectionValue() }
             .let { (horizontal, depth) -> horizontal * depth }.toString()
     }
 
@@ -40,7 +40,7 @@ object Day02 : AoCApp() {
 
     private data class DirectionWithValue(val direction: Direction, val units: Int) {
         fun getDirectionValue(): Point {
-            return direction.vector.times(units)
+            return direction.vector * units
         }
     }
 

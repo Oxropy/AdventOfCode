@@ -14,7 +14,6 @@ object Day03 : AoCApp() {
         val gamma = Integer.parseInt(boolValues.map { it.toIntChar() }.joinToString(""), 2)
         val epsilon = Integer.parseInt(boolValues.map { (!it).toIntChar() }.joinToString(""), 2)
 
-
         return (gamma * epsilon).toString()
     }
 

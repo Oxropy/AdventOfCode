@@ -14,6 +14,12 @@ object Day10 : AoCApp() {
         return inputLines.sumOf { processCorruptedLine(it) }.toString()
     }
 
+    private fun part2(inputLines: List<String>): String {
+        val incomplete = inputLines.filter { getCorruptedCharacter(it) == null }
+        val middle = incomplete.size / 2
+        return incomplete.map { processIncompleteLine(it) }.sortedBy { it }[middle].toString()
+    }
+
     private fun processCorruptedLine(line: String): Int {
         return when (getCorruptedCharacter(line)) {
             ')' -> 3
@@ -41,12 +47,6 @@ object Day10 : AoCApp() {
             }
         }
         return c
-    }
-
-    private fun part2(inputLines: List<String>): String {
-        val incomplete = inputLines.filter { getCorruptedCharacter(it) == null }
-        val middle = incomplete.size / 2
-        return incomplete.map { processIncompleteLine(it) }.sortedBy { it }[middle].toString()
     }
 
     private fun processIncompleteLine(line: String): Long {
