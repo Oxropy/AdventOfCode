@@ -3,7 +3,6 @@ package year2022
 import AoCApp
 
 object Day01 : AoCApp() {
-
     @JvmStatic
     fun main(args: Array<String>) {
         val input = processInput()
