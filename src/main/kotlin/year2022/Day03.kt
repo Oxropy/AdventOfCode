@@ -20,7 +20,13 @@ object Day03 : AoCApp() {
     }
 
     private fun part2(input: List<String>): String {
-        TODO("Not yet implemented")
+        return input.withIndex().groupBy { it.index / 3 }.map {
+            val inALl = it.value[0].value.toCharArray().intersect(
+                it.value[1].value.toCharArray().asIterable().toSet()
+                    .intersect(it.value[2].value.toCharArray().asIterable().toSet())
+            ).first()
+            getPriority(inALl)
+        }.sum().toString()
     }
 
     private fun processInput(inputLines: List<String>): List<String> {
