@@ -10,12 +10,15 @@ object Day06 : AoCApp() {
     }
 
     private fun part1(input: String): String {
-        return (input.withIndex().windowed(4, 1)
-            .first { window -> window.groupingBy { it.value }.eachCount().all { it.value == 1 } }.last().index + 1)
-            .toString()
+        return getMarkerPosition(input, 4).toString()
     }
 
     private fun part2(input: String): String {
-        TODO("Not yet implemented")
+        return getMarkerPosition(input, 14).toString()
+    }
+
+    private fun getMarkerPosition(input: String, markerLength: Int): Int {
+        return input.withIndex().windowed(markerLength, 1)
+            .first { window -> window.groupingBy { it.value }.eachCount().all { it.value == 1 } }.last().index + 1
     }
 }
