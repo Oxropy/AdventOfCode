@@ -39,24 +39,15 @@ object Day07 : AoCApp() {
                         }
                     }
                 }
-                line == "$ ls" -> {
-                    // nothing to do here
-                }
-                line.startsWith("dir ") -> {
+                line == "$ ls" || line.startsWith("dir ") -> {
                     // nothing to do here
                 }
                 else -> {
                     val (sizeString) = line.split(' ', limit = 2)
                     val size = sizeString.toLong()
-                    val mutablePath = currentDir.toMutableList()
-                    while (mutablePath.isNotEmpty()) {
-                        sizes.compute(mutablePath.joinToString(separator = "/", prefix = "/")) { _, pathSize ->
-                            (pathSize ?: 0) + size
-                        }
-                        mutablePath.removeLast()
-                    }
-                    sizes.compute("/") { _, pathSize ->
-                        (pathSize ?: 0) + size
+                    for (index in 0..currentDir.size) {
+                        val path = currentDir.asSequence().take(index).joinToString(separator = "/")
+                        sizes.compute(path) { _, pathSize -> (pathSize ?: 0) + size }
                     }
                 }
             }
