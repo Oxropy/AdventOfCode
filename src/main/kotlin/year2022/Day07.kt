@@ -5,16 +5,16 @@ import AoCApp
 object Day07 : AoCApp() {
     @JvmStatic
     fun main(args: Array<String>) {
-        val input = processInput(inputLines)
+        val input = inputLines
         printPart(1, part1(input))
         printPart(2, part2(input))
     }
 
-    private fun part1(directory: Directory): String {
-        return calculateSizeWhenDirSizeMost100000(directory).toString()
+    private fun part1(input: List<String>): String {
+        return calculateSizeWhenDirSizeMost100000(input).toString()
     }
 
-    private fun part2(node: Any): String {
+    private fun part2(input: List<String>): String {
         TODO("Not yet implemented")
     }
 
