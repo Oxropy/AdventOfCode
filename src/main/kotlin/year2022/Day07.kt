@@ -11,99 +11,63 @@ object Day07 : AoCApp() {
     }
 
     private fun part1(input: List<String>): String {
-        return calculateSizeWhenDirSizeMost100000(input).toString()
+        return calculateDirectorySizes(input).values.filter { it <= 100_000 }.sum().toString()
     }
 
     private fun part2(input: List<String>): String {
-        TODO("Not yet implemented")
+        val sizes = calculateDirectorySizes(input)
+        val usedSpace = sizes.getValue("/")
+        val availableSpace = 70_000_000 - usedSpace
+        return sizes.values.filter { availableSpace + it >= 30_000_000 }.minOf { it }.toString()
     }
 
-    private fun calculateSizeWhenDirSizeMost100000(directory: Directory): Int {
-        var nodesSize = 0
-        for (node in directory.directories) {
-            nodesSize += calculateSizeWhenDirSizeMost100000(node)
-        }
-
-        val size = directory.getSize()
-        val overallSize = nodesSize + size
-        if (overallSize <= 100_000) {
-            return overallSize
-        }
-
-        return nodesSize
-    }
-
-    private fun processInput(input: List<String>): Directory {
-        var currentDirectory = Directory("/", null)
-        input.forEach { line ->
-            currentDirectory = if (line.startsWith("$")) {
-                parseCommand(line.drop(2), currentDirectory)
-            } else {
-                parseOutput(line, currentDirectory)
+    private fun calculateDirectorySizes(inputLines: List<String>): Map<String, Long> {
+        val files = mutableListOf<Pair<List<String>, Long>>()
+        val currentDir = mutableListOf<String>()
+        for (line in inputLines) {
+            when {
+                line.startsWith("$ cd") -> {
+                    when (val ref = line.substring(5)) {
+                        ".." -> {
+                            currentDir.removeLast()
+                        }
+                        "/" -> {
+                            currentDir.clear()
+                        }
+                        else -> {
+                            currentDir.add(ref)
+                        }
+                    }
+                }
+                line == "$ ls" -> {
+                    // nothing to do here
+                }
+                line.startsWith("dir ") -> {
+                    // nothing to do here
+                }
+                else -> {
+                    val (size) = line.split(' ', limit = 2)
+                    files.add(Pair(currentDir.toList(), size.toLong()))
+                }
             }
         }
 
-        return currentDirectory.getRoot()
-    }
-
-    private fun parseCommand(command: String, currentDirectory: Directory): Directory {
-        val split = command.split(" ")
-        return when (split[0]) {
-            "cd" -> changeDir(split[1].trim(), currentDirectory)
-            "ls" -> currentDirectory
-            else -> unreachable()
-        }
-    }
-
-    private fun changeDir(dir: String, currentDirectory: Directory): Directory {
-        if (dir == "/") {
-            return currentDirectory.getRoot()
-        }
-
-        if (dir == "..") {
-            return currentDirectory.getParent()!!
-        }
-
-        return currentDirectory.changeTo(dir)
-    }
-
-    private fun parseOutput(output: String, currentDirectory: Directory): Directory {
-        val split = output.split(" ")
-        if (split[0] == "dir") {
-            currentDirectory.addNode(split[1].trim())
-        } else {
-            val size = split[0].toInt()
-            currentDirectory.addFile(split[1].trim(), size)
-        }
-
-        return currentDirectory
-    }
-
-    class Directory(private val name: String, private val parent: Directory?) {
-        val directories: MutableList<Directory> = mutableListOf()
-        private val files: MutableList<File> = mutableListOf()
-
-        fun addNode(name: String) {
-            directories.add(Directory(name, this))
-        }
-
-        fun addFile(name: String, size: Int) {
-            files.add(File(name, size))
-        }
-
-        fun changeTo(dir: String): Directory = directories.first { it.name == dir }
-        fun getFilesSize(): Int = files.sumOf { it.size }
-        fun getNodesSize(): Int = directories.sumOf { it.getNodesSize() + it.getFilesSize() }
-        fun getSize(): Int = getFilesSize() + getNodesSize()
-        fun getParent(): Directory? = parent
-        fun getRoot(): Directory {
-            if (parent != null) {
-                return parent.getRoot()
+        val sizes = mutableMapOf<String, Long>()
+        files.forEach { (path, size) ->
+            val mutablePath = path.toMutableList()
+            while (mutablePath.isNotEmpty()) {
+                sizes.compute(mutablePath.joinToString(separator = "/", prefix = "/")) { _, pathSize ->
+                    (pathSize ?: 0) + size
+                }
+                mutablePath.removeLast()
             }
-
-            return this
+            sizes.compute("/") { _, pathSize ->
+                (pathSize ?: 0) + size
+            }
         }
-    }
 
-    data class File(val name: String, val size: Int)
+        return sizes
+    }
 }
+
+
