@@ -22,7 +22,7 @@ object Day07 : AoCApp() {
     }
 
     private fun calculateDirectorySizes(inputLines: List<String>): Map<String, Long> {
-        val files = mutableListOf<Pair<List<String>, Long>>()
+        val sizes = mutableMapOf<String, Long>()
         val currentDir = mutableListOf<String>()
         for (line in inputLines) {
             when {
@@ -46,23 +46,19 @@ object Day07 : AoCApp() {
                     // nothing to do here
                 }
                 else -> {
-                    val (size) = line.split(' ', limit = 2)
-                    files.add(Pair(currentDir.toList(), size.toLong()))
+                    val (sizeString) = line.split(' ', limit = 2)
+                    val size = sizeString.toLong()
+                    val mutablePath = currentDir.toMutableList()
+                    while (mutablePath.isNotEmpty()) {
+                        sizes.compute(mutablePath.joinToString(separator = "/", prefix = "/")) { _, pathSize ->
+                            (pathSize ?: 0) + size
+                        }
+                        mutablePath.removeLast()
+                    }
+                    sizes.compute("/") { _, pathSize ->
+                        (pathSize ?: 0) + size
+                    }
                 }
-            }
-        }
-
-        val sizes = mutableMapOf<String, Long>()
-        files.forEach { (path, size) ->
-            val mutablePath = path.toMutableList()
-            while (mutablePath.isNotEmpty()) {
-                sizes.compute(mutablePath.joinToString(separator = "/", prefix = "/")) { _, pathSize ->
-                    (pathSize ?: 0) + size
-                }
-                mutablePath.removeLast()
-            }
-            sizes.compute("/") { _, pathSize ->
-                (pathSize ?: 0) + size
             }
         }
 
