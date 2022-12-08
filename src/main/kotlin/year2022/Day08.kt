@@ -11,16 +11,10 @@ object Day08 : AoCApp() {
     }
 
     private fun part1(input: List<List<Int>>): String {
-        var count = 0
-        for (row in input.indices) {
-            for (column in input[row].indices) {
-                if (isVisible(input, row, column)) {
-                    count++
-                }
-            }
-        }
-
-        return count.toString()
+        return input.withIndex().sumOf { indexedRowValue ->
+            indexedRowValue.value.withIndex()
+                .count { indexedColumnValue -> isVisible(input, indexedRowValue.index, indexedColumnValue.index) }
+        }.toString()
     }
 
     private fun isVisible(input: List<List<Int>>, row: Int, column: Int): Boolean {
