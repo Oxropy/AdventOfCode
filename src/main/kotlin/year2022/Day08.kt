@@ -27,7 +27,42 @@ object Day08 : AoCApp() {
     }
 
     private fun part2(input: List<List<Int>>): String {
-        TODO("Not yet implemented")
+        return input.withIndex().maxOf { indexedRowValue ->
+            indexedRowValue.value.withIndex()
+                .maxOf { indexedColumnValue -> calculateSight(input, indexedRowValue.index, indexedColumnValue.index) }
+        }.toString()
+    }
+
+    private fun calculateSight(input: List<List<Int>>, row: Int, column: Int): Int {
+        val current = input[row][column]
+        val top = if (row >= 1) input.take(row).withIndex().lastOrNull { it.value[column] >= current }.let {
+            when (it) {
+                null -> row
+                else -> row - it.index
+            }
+        } else 0
+        val left = if (column >= 1) input[row].take(column).withIndex().lastOrNull { it.value >= current }.let {
+            when (it) {
+                null -> column
+                else -> column - it.index
+            }
+        } else 0
+        val bottom =
+            if (row <= input.size - 2) input.drop(row + 1).withIndex().firstOrNull { it.value[column] >= current }.let {
+                when (it) {
+                    null -> input.size - row - 1
+                    else -> it.index + 1
+                }
+            } else 0
+        val right = if (column <= input[row].size - 2) input[row].drop(column + 1).withIndex()
+            .firstOrNull { it.value >= current }.let {
+                when (it) {
+                    null -> input[row].size - column - 1
+                    else -> it.index + 1
+                }
+            } else 0
+
+        return top * left * bottom * right
     }
 
     private fun processInput(inputLines: List<String>): List<List<Int>> {
