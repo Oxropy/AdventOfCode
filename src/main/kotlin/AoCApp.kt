@@ -19,6 +19,10 @@ abstract class AoCApp {
         return Point(x + o.x, y + o.y)
     }
 
+    operator fun Point.minus(o: Point): Point {
+        return Point(x - o.x, y - o.y)
+    }
+
     operator fun Point.times(n: Int): Point {
         return Point(x * n, y * n)
     }
