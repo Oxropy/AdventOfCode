@@ -10,37 +10,32 @@ object Day10 : AoCApp() {
         printPart(2, part2(input))
     }
 
-    private var x = 1
-    private var cycle = 0
-    private var cyclesUntilReport = 20
-    private const val reportCycle = 40
-    private var signalStrengthSum = 0
-
     private fun part1(input: List<Instruction>): String {
+        val registerAndSignalStrength = RegisterAndSignalStrength(1, 0)
+        val cycleInformation = CycleInformation(0, 40, 20)
         input.forEach {
             when (it) {
-                is Noop -> cycle()
+                is Noop -> cycle(registerAndSignalStrength, cycleInformation)
                 is AddX -> {
-                    cycle()
-                    cycle()
-                    x += it.value
+                    cycle(registerAndSignalStrength, cycleInformation)
+                    cycle(registerAndSignalStrength, cycleInformation)
+                    registerAndSignalStrength.add(it.value)
                 }
             }
         }
 
-        return signalStrengthSum.toString()
+        return registerAndSignalStrength.signalStrengthSum.toString()
     }
 
-    private fun cycle() {
-        cycle++
-        cyclesUntilReport--
-        if (cyclesUntilReport == 0) {
-            val signalStrength = cycle * x
-            signalStrengthSum += signalStrength
+    private fun cycle(registerAndSignalStrength: RegisterAndSignalStrength, cycleInformation: CycleInformation) {
+        cycleInformation.addCycle()
+        if (cycleInformation.isReport()) {
+            val signalStrength = cycleInformation.cycle * registerAndSignalStrength.x
+            registerAndSignalStrength.signalStrengthSum += signalStrength
 
-            println("cycle: $cycle, x: $x, strength: $signalStrength, sum: $signalStrengthSum")
+            println("cycle: ${cycleInformation.cycle}, x: ${registerAndSignalStrength.x}, strength: $signalStrength, sum: ${registerAndSignalStrength.signalStrengthSum}")
 
-            cyclesUntilReport = reportCycle
+            cycleInformation.resetCycleUntilReport()
         }
     }
 
@@ -64,4 +59,25 @@ object Day10 : AoCApp() {
     class Noop : Instruction
 
     data class AddX(val value: Int) : Instruction
+
+    data class RegisterAndSignalStrength(var x: Int, var signalStrengthSum: Int) {
+        fun add(value: Int) {
+            x += value
+        }
+    }
+
+    data class CycleInformation(var cycle: Int, val reportCycle: Int, var cyclesUntilReport: Int) {
+        fun addCycle() {
+            cycle++
+            cyclesUntilReport--
+        }
+
+        fun isReport(): Boolean {
+            return cyclesUntilReport == 0
+        }
+
+        fun resetCycleUntilReport() {
+            cyclesUntilReport = reportCycle
+        }
+    }
 }
