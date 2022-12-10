@@ -15,10 +15,10 @@ object Day10 : AoCApp() {
         val cycleInformation = CycleInformation(0, 40, 20)
         input.forEach {
             when (it) {
-                is Noop -> cycle(registerAndSignalStrength, cycleInformation)
+                is Noop -> cyclePart1(registerAndSignalStrength, cycleInformation)
                 is AddX -> {
-                    cycle(registerAndSignalStrength, cycleInformation)
-                    cycle(registerAndSignalStrength, cycleInformation)
+                    cyclePart1(registerAndSignalStrength, cycleInformation)
+                    cyclePart1(registerAndSignalStrength, cycleInformation)
                     registerAndSignalStrength.add(it.value)
                 }
             }
@@ -27,20 +27,45 @@ object Day10 : AoCApp() {
         return registerAndSignalStrength.signalStrengthSum.toString()
     }
 
-    private fun cycle(registerAndSignalStrength: RegisterAndSignalStrength, cycleInformation: CycleInformation) {
+    private fun cyclePart1(registerAndSignalStrength: RegisterAndSignalStrength, cycleInformation: CycleInformation) {
         cycleInformation.addCycle()
         if (cycleInformation.isReport()) {
             val signalStrength = cycleInformation.cycle * registerAndSignalStrength.x
             registerAndSignalStrength.signalStrengthSum += signalStrength
-
-            println("cycle: ${cycleInformation.cycle}, x: ${registerAndSignalStrength.x}, strength: $signalStrength, sum: ${registerAndSignalStrength.signalStrengthSum}")
-
             cycleInformation.resetCycleUntilReport()
         }
     }
 
     private fun part2(input: List<Instruction>): String {
-        TODO("Not yet implemented")
+        val registerAndSignalStrength = RegisterAndSignalStrength(1, 0)
+        val cycleInformation = CycleInformation(0, 40, 40)
+        input.forEach {
+            when (it) {
+                is Noop -> cyclePart2(registerAndSignalStrength, cycleInformation)
+                is AddX -> {
+                    cyclePart2(registerAndSignalStrength, cycleInformation)
+                    cyclePart2(registerAndSignalStrength, cycleInformation)
+                    registerAndSignalStrength.add(it.value)
+                }
+            }
+        }
+
+        return ""
+    }
+
+    private fun cyclePart2(registerAndSignalStrength: RegisterAndSignalStrength, cycleInformation: CycleInformation) {
+        val rowCycle = cycleInformation.cycle % cycleInformation.reportCycle
+        if (rowCycle == registerAndSignalStrength.x || rowCycle == registerAndSignalStrength.x - 1 || rowCycle == registerAndSignalStrength.x + 1) {
+            print("#")
+        } else {
+            print(".")
+        }
+
+        cycleInformation.addCycle()
+        if (cycleInformation.isReport()) {
+            println()
+            cycleInformation.resetCycleUntilReport()
+        }
     }
 
     private fun processInput(inputLines: List<String>): List<Instruction> {
