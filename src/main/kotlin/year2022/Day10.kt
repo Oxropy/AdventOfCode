@@ -15,8 +15,8 @@ object Day10 : AoCApp() {
         val cycleInformation = CycleInformation(0, 40, 20)
         input.forEach {
             when (it) {
-                is Noop -> cyclePart1(registerAndSignalStrength, cycleInformation)
-                is AddX -> {
+                is Instruction.Noop -> cyclePart1(registerAndSignalStrength, cycleInformation)
+                is Instruction.AddX -> {
                     cyclePart1(registerAndSignalStrength, cycleInformation)
                     cyclePart1(registerAndSignalStrength, cycleInformation)
                     registerAndSignalStrength.add(it.value)
@@ -41,8 +41,8 @@ object Day10 : AoCApp() {
         val cycleInformation = CycleInformation(0, 40, 40)
         input.forEach {
             when (it) {
-                is Noop -> cyclePart2(registerAndSignalStrength, cycleInformation)
-                is AddX -> {
+                is Instruction.Noop -> cyclePart2(registerAndSignalStrength, cycleInformation)
+                is Instruction.AddX -> {
                     cyclePart2(registerAndSignalStrength, cycleInformation)
                     cyclePart2(registerAndSignalStrength, cycleInformation)
                     registerAndSignalStrength.add(it.value)
@@ -72,18 +72,17 @@ object Day10 : AoCApp() {
         return inputLines.map {
             val split = it.split(" ", limit = 2)
             when (split[0]) {
-                "noop" -> Noop()
-                "addx" -> AddX(split[1].toInt())
+                "noop" -> Instruction.Noop
+                "addx" -> Instruction.AddX(split[1].toInt())
                 else -> unreachable()
             }
         }
     }
 
-    interface Instruction
-
-    class Noop : Instruction
-
-    data class AddX(val value: Int) : Instruction
+    sealed interface Instruction {
+        object Noop : Instruction
+        data class AddX(val value: Int) : Instruction
+    }
 
     data class RegisterAndSignalStrength(var x: Int, var signalStrengthSum: Int) {
         fun add(value: Int) {
