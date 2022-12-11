@@ -10,11 +10,11 @@ object Day06 : AoCApp() {
     }
 
     private fun part1(groups: List<List<String>>): String {
-        return groups.sumBy { group -> group.joinToString("").toCharArray().distinct().count() }.toString()
+        return groups.sumOf { group -> group.joinToString("").toCharArray().distinct().count() }.toString()
     }
 
     private fun part2(groups: List<List<String>>): String {
-        return groups.sumBy { group ->
+        return groups.sumOf { group ->
             group.joinToString("").toCharArray().toList().groupingBy { gr -> gr }.eachCount()
                 .count { charCount -> charCount.value == group.count() }
         }.toString()

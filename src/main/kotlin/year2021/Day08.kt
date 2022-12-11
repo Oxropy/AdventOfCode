@@ -15,7 +15,7 @@ object Day08: AoCApp() {
     }
 
     private fun part2(input: List<Entry>): String {
-        TODO("Not yet implemented")
+        TODO("Not yet implemented $input")
     }
 
     private fun processInput(input: List<String>): List<Entry> {
