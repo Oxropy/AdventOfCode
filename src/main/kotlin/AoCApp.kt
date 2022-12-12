@@ -40,4 +40,11 @@ abstract class AoCApp {
     companion object {
         fun unreachable(): Nothing = throw Exception("Should not be reachable!")
     }
+
+    enum class Direction(val vector: Point) {
+        UP(Point(0, 1)),
+        RIGHT(Point(1, 0)),
+        DOWN(Point(0, -1)),
+        LEFT(Point(-1, 0))
+    }
 }
