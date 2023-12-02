@@ -7,19 +7,26 @@ object Day02: AoCApp() {
     fun main(args: Array<String>) {
         val input = parseGames(inputLines)
         printPart(1, part1(input))
-//        printPart(2, part2(input))
+        printPart(2, part2(input))
     }
 
     private fun part1(games: List<Game>): String {
-        return games.filter { isPossible(it, 12, 13, 14) }.sumOf { it.id }.toString()
+        return games.filter { isPossible(it) }.sumOf { it.id }.toString()
     }
 
     private fun part2(games: List<Game>): String {
-        TODO("Not yet implemented")
+        return games.sumOf { getMitCubeCount(it) }.toString()
     }
 
-    private fun isPossible(game: Game, maxRed: Int, maxGreen: Int, maxBlue: Int): Boolean {
-        return !game.subsets.any { it.red > maxRed || it.green > maxGreen || it.blue > maxBlue }
+    private fun isPossible(game: Game): Boolean {
+        return !game.subsets.any { it.red > 12 || it.green > 13 || it.blue > 14 }
+    }
+
+    private fun getMitCubeCount(game: Game): Int {
+        val maxRed = game.subsets.maxOf { it.red }
+        val maxGreen = game.subsets.maxOf { it.green }
+        val maxBlue = game.subsets.maxOf { it.blue }
+        return maxRed * maxGreen * maxBlue
     }
 
     private fun parseGames(input: List<String>): List<Game> {
