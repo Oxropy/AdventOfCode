@@ -1,5 +1,3 @@
-@file:Suppress("UNUSED_PARAMETER")
-
 package year2023
 
 import AoCApp
@@ -9,7 +7,7 @@ object Day01 : AoCApp() {
     @JvmStatic
     fun main(args: Array<String>) {
         val input = inputLines
-//        printPart(1, part1(input))
+        printPart(1, part1(input))
         printPart(2, part2(input))
     }
 
