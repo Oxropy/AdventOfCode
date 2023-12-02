@@ -15,14 +15,14 @@ object Day02: AoCApp() {
     }
 
     private fun part2(games: List<Game>): String {
-        return games.sumOf { getMitCubeCount(it) }.toString()
+        return games.sumOf { getWithCubeCount(it) }.toString()
     }
 
     private fun isPossible(game: Game): Boolean {
         return !game.subsets.any { it.red > 12 || it.green > 13 || it.blue > 14 }
     }
 
-    private fun getMitCubeCount(game: Game): Int {
+    private fun getWithCubeCount(game: Game): Int {
         val maxRed = game.subsets.maxOf { it.red }
         val maxGreen = game.subsets.maxOf { it.green }
         val maxBlue = game.subsets.maxOf { it.blue }
