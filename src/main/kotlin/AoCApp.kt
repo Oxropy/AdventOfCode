@@ -35,6 +35,10 @@ abstract class AoCApp {
         fun setY(y: Int): Point {
             return Point(x, y)
         }
+
+        fun isNegative(): Boolean {
+            return x < 0 || y < 0
+        }
     }
 
     companion object {
@@ -42,9 +46,13 @@ abstract class AoCApp {
     }
 
     enum class Direction(val vector: Point) {
+        UPLEFT(Point(-1, 1)),
         UP(Point(0, 1)),
+        UPRIGHT(Point(1, 1)),
         RIGHT(Point(1, 0)),
+        DOWNRIGHT(Point(1, -1)),
         DOWN(Point(0, -1)),
+        DOWNLEFT(Point(-1, -1)),
         LEFT(Point(-1, 0))
     }
 }
