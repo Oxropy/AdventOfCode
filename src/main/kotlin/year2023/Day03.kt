@@ -6,7 +6,7 @@ object Day03: AoCApp() {
     @JvmStatic
     fun main(args: Array<String>) {
         val input = inputLines
-//        printPart(1, part1(input))
+        printPart(1, part1(input))
         printPart(2, part2(input))
     }
 
@@ -69,18 +69,22 @@ object Day03: AoCApp() {
         val numbers = mutableListOf<Int>()
         val leftChar = getCharFromPoint(input, Direction.LEFT.vector + point)
         if (leftChar.isDigit()) {
-            val number = "" + getLeftDigits(input, point) + leftChar
+            val number = getLeftDigits(input, point)
             numbers.add(number.toInt())
         }
 
         val rightChar = getCharFromPoint(input, Direction.RIGHT.vector + point)
         if (rightChar.isDigit()) {
-            val number = "" + rightChar + getRightDigits(input, point)
+            val number = getRightDigits(input, point)
             numbers.add(number.toInt())
         }
 
-        numbers.addAll(getNumbers(input, point, Direction.UPLEFT, Direction.UP, Direction.UPRIGHT))
-        numbers.addAll(getNumbers(input, point, Direction.DOWNLEFT, Direction.DOWN, Direction.DOWNRIGHT))
+        if (point.y > 0) {
+            numbers.addAll(getNumbers(input, point, Direction.UPLEFT, Direction.UP, Direction.UPRIGHT))
+        }
+        if (point.y < input.size) {
+            numbers.addAll(getNumbers(input, point, Direction.DOWNLEFT, Direction.DOWN, Direction.DOWNRIGHT))
+        }
 
         return numbers
     }
@@ -91,27 +95,34 @@ object Day03: AoCApp() {
         var rightSide = ""
 
         val rightPoint = right.vector + point
-        val rightChar = getCharFromPoint(input, rightPoint)
-        if (rightChar.isDigit()){
-            rightSide += rightChar + getRightDigits(input, rightPoint)
+        if (!rightPoint.isNegative()) {
+            val rightChar = getCharFromPoint(input, rightPoint)
+            if (rightChar.isDigit()){
+                rightSide += rightChar + getRightDigits(input, rightPoint)
+            }
         }
 
         val leftPoint = left.vector + point
-        val leftChar = getCharFromPoint(input, leftPoint)
-        if (leftChar.isDigit()){
-            leftSide += getLeftDigits(input, leftPoint) + leftChar
+        if (!leftPoint.isNegative()) {
+            val leftChar = getCharFromPoint(input, leftPoint)
+            if (leftChar.isDigit()){
+                leftSide += getLeftDigits(input, leftPoint) + leftChar
+            }
         }
 
-        val middleChar = getCharFromPoint(input, middle.vector + point)
-        if (middleChar.isDigit()){
-            numbers.add((leftSide + middleChar + rightSide).toInt())
-        }
-        else {
-            if (leftSide.isNotEmpty()) {
-                numbers.add(leftSide.toInt())
+        val middlePoint = middle.vector + point
+        if (!middlePoint.isNegative()) {
+            val middleChar = getCharFromPoint(input, middlePoint)
+            if (middleChar.isDigit()){
+                numbers.add((leftSide + middleChar + rightSide).toInt())
             }
-            if (rightSide.isNotEmpty()) {
-                numbers.add(rightSide.toInt())
+            else {
+                if (leftSide.isNotEmpty()) {
+                    numbers.add(leftSide.toInt())
+                }
+                if (rightSide.isNotEmpty()) {
+                    numbers.add(rightSide.toInt())
+                }
             }
         }
 
