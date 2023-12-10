@@ -1,19 +1,26 @@
 package year2023
 
 import AoCApp
-import kotlin.reflect.typeOf
 
 object Day07 : AoCApp() {
     @JvmStatic
     fun main(args: Array<String>) {
         val input = inputLines
-        printPart(1, part1(input))
-//        printPart(2, part2(input))
+//        printPart(1, part1(input))
+        printPart(2, part2(input))
     }
 
     private fun part1(input: List<String>): String {
-        return input.map { line -> line.split(' ').let { val value = cardInputToHand(it[0])
-            Triple(value, getValue(value), it[1].toInt()) } }
+        return input.map { line -> line.split(' ').let { val value = cardInputToHand1(it[0])
+            Pair(getValue1(value), it[1].toInt()) } }
+            .sortedBy { it.first }
+            .mapIndexed { index, pair -> (index + 1) * pair.second }
+            .sum().toString()
+    }
+
+    private fun part2(input: List<String>): String {
+        return input.map { line -> line.split(' ').let { val value = cardInputToHand2(it[0])
+            Triple(value, getValue2(value), it[1].toInt()) } }
             .sortedBy { it.second }
             .let {
                 it.forEach { item ->  println("${item.first.javaClass.simpleName} ${item.first.card1.name}|${item.first.card2.name}|${item.first.card3.name}|${item.first.card4.name}|${item.first.card5.name} ${item.second}") }
@@ -23,37 +30,44 @@ object Day07 : AoCApp() {
             .sum().toString()
     }
 
-    private fun part2(input: List<String>): String {
-        TODO("Not yet implemented 249391089 / 247771633")
+    private fun cardInputToHand1(cardInput: String): Hand {
+        val cards = cardInput.toCharArray().map { charToCard(it) }
+        return getHand(cards, cards)
     }
 
-    private fun cardInputToHand(cardInput: String): Hand {
+    private fun cardInputToHand2(cardInput: String): Hand {
         val cards = cardInput.toCharArray().map { charToCard(it) }
-        return cards.groupBy { it }.let {
+        val cardsWithoutJoker = changeJokerCards(cards)
+        return getHand(cardsWithoutJoker, cards)
+    }
+
+    private fun getHand(
+        cardsToCheck: List<Card>,
+        cardsToUse: List<Card>
+    ): Hand {
+        return cardsToCheck.groupBy { it }.let {
             when (it.size) {
-                1 -> Hand.FiveOfAKind(cards[0], cards[1], cards[2], cards[3], cards[4])
-                2 -> getHandWithTwoDifferentCardTypes(cards[0], cards[1], cards[2], cards[3], cards[4], it)
-                3 -> getHandWithThreeDifferentCardTypes(cards[0], cards[1], cards[2], cards[3], cards[4], it)
-                4 -> Hand.OnePair(cards[0], cards[1], cards[2], cards[3], cards[4])
-                5 -> Hand.HighCard(cards[0], cards[1], cards[2], cards[3], cards[4])
+                1 -> Hand.FiveOfAKind(cardsToUse[0], cardsToUse[1], cardsToUse[2], cardsToUse[3], cardsToUse[4])
+                2 -> getHandWithTwoDifferentCardTypes(cardsToUse[0], cardsToUse[1], cardsToUse[2], cardsToUse[3], cardsToUse[4], it)
+                3 -> getHandWithThreeDifferentCardTypes(cardsToUse[0], cardsToUse[1], cardsToUse[2], cardsToUse[3], cardsToUse[4], it)
+                4 -> Hand.OnePair(cardsToUse[0], cardsToUse[1], cardsToUse[2], cardsToUse[3], cardsToUse[4])
+                5 -> Hand.HighCard(cardsToUse[0], cardsToUse[1], cardsToUse[2], cardsToUse[3], cardsToUse[4])
                 else -> unreachable()
             }
         }
     }
 
-    private fun getValue(hand: Hand): Long {
-        return hand.value * 1000000000000 + hand.card1.value * 100000000 + hand.card2.value * 1000000 + hand.card3.value * 10000 + hand.card4.value * 100 + hand.card5.value
+    private fun changeJokerCards(cards: List<Card>): List<Card> {
+        val bestFitting = cards.groupBy { it }.map { Pair(it.key, it.value.size) }.sortedByDescending { it.second }[0].first
+        return cards.map { if (it == Card.J) bestFitting else it }
     }
 
-    private fun getHighValue(hand: Hand): Int {
-        return if (hand is Hand.HighCard) listOf(
-            hand.card1.value,
-            hand.card2.value,
-            hand.card3.value,
-            hand.card4.value,
-            hand.card5.value
-        ).maxByOrNull { it }!!
-        else 0
+    private fun getValue1(hand: Hand): Long {
+        return hand.value * 10000000000 + hand.card1.value1 * 100000000 + hand.card2.value1 * 1000000 + hand.card3.value1 * 10000 + hand.card4.value1 * 100 + hand.card5.value1
+    }
+
+    private fun getValue2(hand: Hand): Long {
+        return hand.value * 10000000000 + hand.card1.value2 * 100000000 + hand.card2.value2 * 1000000 + hand.card3.value2 * 10000 + hand.card4.value2 * 100 + hand.card5.value2
     }
 
     private fun charToCard(char: Char): Card {
@@ -113,20 +127,20 @@ object Day07 : AoCApp() {
         }
     }
 
-    enum class Card(val value: Int) {
-        A(13),
-        K(12),
-        Q(11),
-        J(10),
-        T(9),
-        Nine(8),
-        Eight(7),
-        Seven(6),
-        Six(5),
-        Five(4),
-        Four(3),
-        Three(2),
-        Two(1)
+    enum class Card(val value1: Int, val value2: Int) {
+        A(13, 13),
+        K(12, 12),
+        Q(11, 11),
+        J(10, 1),
+        T(9, 10),
+        Nine(8, 9),
+        Eight(7, 8),
+        Seven(6, 7),
+        Six(5, 6),
+        Five(4, 5),
+        Four(3, 4),
+        Three(2, 3),
+        Two(1, 2)
     }
 
     sealed interface Hand {
