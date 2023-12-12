@@ -7,7 +7,7 @@ object Day09 : AoCApp() {
     fun main(args: Array<String>) {
         val input = inputLines
         printPart(1, part1(input))
-//        printPart(2, part2(input))
+        printPart(2, part2(input))
     }
 
     private fun part1(input: List<String>): String {
@@ -16,13 +16,20 @@ object Day09 : AoCApp() {
                 val intermediateValues = mutableListOf<MutableList<Int>>()
                 intermediateValues.add(it.toMutableList())
                 intermediateSteps(it, intermediateValues)
-                getAdditionalSequenceValue(intermediateValues)
+                getAdditionalSequenceValueAtEnd(intermediateValues)
             }
         }.toString()
     }
 
     private fun part2(input: List<String>): String {
-        TODO("Not yet implemented")
+        return input.sumOf { line ->
+            line.split(' ').map { it.toInt() }.let {
+                val intermediateValues = mutableListOf<MutableList<Int>>()
+                intermediateValues.add(it.toMutableList())
+                intermediateSteps(it, intermediateValues)
+                getAdditionalSequenceValueAtStart(intermediateValues)
+            }
+        }.toString()
     }
 
     private fun intermediateSteps(values: List<Int>, intermediateValues: MutableList<MutableList<Int>>) {
@@ -40,17 +47,23 @@ object Day09 : AoCApp() {
         intermediateSteps(currentIntermediateValues, intermediateValues)
     }
 
-    private fun getAdditionalSequenceValue(intermediateValues: MutableList<MutableList<Int>>): Int {
-//        println(intermediateValues.last())
+    private fun getAdditionalSequenceValueAtEnd(intermediateValues: MutableList<MutableList<Int>>): Int {
         for (i in intermediateValues.size - 1 downTo 1) {
             val element = intermediateValues[i].last() + intermediateValues[i - 1].last()
-//            print(intermediateValues[i - 1])
-//            println(element)
             intermediateValues[i - 1].add(element)
         }
 
         val result = intermediateValues[0].last()
-//        println(result)
+        return result
+    }
+
+    private fun getAdditionalSequenceValueAtStart(intermediateValues: MutableList<MutableList<Int>>): Int {
+        for (i in intermediateValues.size - 1 downTo 1) {
+            val element = intermediateValues[i - 1].first() - intermediateValues[i].first()
+            intermediateValues[i - 1].add(0, element)
+        }
+
+        val result = intermediateValues[0].first()
         return result
     }
 }
