@@ -27,6 +27,8 @@ abstract class AoCApp {
         return Point(x * n, y * n)
     }
 
+    operator fun Point.plus(dir: Direction) = this + dir.vector
+
     data class Point(val x: Int, val y: Int){
         fun setX(x: Int): Point {
             return Point(x, y)
@@ -53,6 +55,18 @@ abstract class AoCApp {
         DOWNRIGHT(Point(1, -1)),
         DOWN(Point(0, -1)),
         DOWNLEFT(Point(-1, -1)),
-        LEFT(Point(-1, 0))
+        LEFT(Point(-1, 0));
+
+        fun opposite() = when (this) {
+            UPLEFT -> DOWNRIGHT
+            UP -> DOWN
+            UPRIGHT -> DOWNLEFT
+            RIGHT -> LEFT
+            DOWNRIGHT -> UPLEFT
+            DOWN -> UP
+            DOWNLEFT -> UPRIGHT
+            LEFT -> RIGHT
+        }
     }
+
 }
