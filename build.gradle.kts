@@ -1,7 +1,9 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.6.0"
+    kotlin("jvm") version "1.9.21"
     application
 }
 
@@ -20,6 +22,9 @@ tasks.test {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "17"
-    kotlinOptions.allWarningsAsErrors = false
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_17
+        allWarningsAsErrors = false
+        languageVersion = KotlinVersion.KOTLIN_1_9
+    }
 }
