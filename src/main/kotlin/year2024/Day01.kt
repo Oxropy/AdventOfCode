@@ -8,7 +8,7 @@ object Day01: AoCApp() {
     fun main(args: Array<String>) {
         val input = parseGames(inputLines)
         printPart(1, part1(input.first, input.second))
-//        printPart(2, part2(input.first, input.second))
+        printPart(2, part2(input.first, input.second))
     }
 
     private fun part1(list1: List<Int>, list2: List<Int>): String {
@@ -18,7 +18,7 @@ object Day01: AoCApp() {
     }
 
     private fun part2(list1: List<Int>, list2: List<Int>): String {
-        TODO("Not yet implemented")
+        return list1.sumOf { first -> list2.count { second -> first == second } * first }.toString()
     }
 
     private fun parseGames(input: List<String>): Pair<List<Int>, List<Int>> {
