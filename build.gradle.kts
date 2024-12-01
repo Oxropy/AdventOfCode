@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.9.21"
+    kotlin("jvm") version "2.1.0"
     application
 }
 
@@ -25,6 +25,6 @@ tasks.withType<KotlinCompile> {
     compilerOptions {
         jvmTarget = JvmTarget.JVM_17
         allWarningsAsErrors = false
-        languageVersion = KotlinVersion.KOTLIN_1_9
+        languageVersion = KotlinVersion.KOTLIN_2_1
     }
 }
