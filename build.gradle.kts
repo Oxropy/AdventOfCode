@@ -23,7 +23,7 @@ tasks.test {
 
 tasks.withType<KotlinCompile> {
     compilerOptions {
-        jvmTarget = JvmTarget.JVM_17
+        jvmTarget = JvmTarget.JVM_21
         allWarningsAsErrors = false
         languageVersion = KotlinVersion.KOTLIN_2_1
     }
