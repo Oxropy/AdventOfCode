@@ -1,7 +1,8 @@
 package year2024
 
 import AoCApp
-import kotlin.math.abs
+import kotlin.math.absoluteValue
+import kotlin.math.sign
 
 object Day02 : AoCApp() {
     @JvmStatic
@@ -12,28 +13,23 @@ object Day02 : AoCApp() {
     }
 
     private fun part1(input: List<List<Int>>): String {
-        return input.sumOf { levels ->
-            var lastValue = levels[0]
-            val asc = levels[0] < levels[1]
-            for (i in 1 until levels.size) {
-                val diff = lastValue - levels[i]
-                if ((diff < 0 && !asc) || (diff > 0 && asc)) {
-                    return@sumOf 0
-                }
-                val abs = abs(diff)
-                if (abs == 0 || abs > 3) {
-                    return@sumOf 0
-                }
-
-                lastValue = levels[i]
-            }
-
-            1L
-        }.toString()
+        return input.count { isSafe(it) }.toString()
     }
 
     private fun part2(input: List<List<Int>>): String {
-        TODO("Not yet implemented")
+        return input.count { levels ->
+            isSafe(levels) or getVariations(levels).any { isSafe(it) }
+        }.toString()
+    }
+
+    private fun getVariations(levels: List<Int>): List<List<Int>> {
+        return levels.indices.map { levels.filterIndexed { i, _ -> i != it } }
+    }
+
+    private fun isSafe(levels: List<Int>) : Boolean {
+        val differences = levels.windowed(2).map { (a, b) -> b - a }.toList()
+        val sign = differences.first().sign
+        return differences.all { it.sign == sign && it.absoluteValue in 1..3 }
     }
 
     private fun parseReports(inputLines: List<String>): List<List<Int>> {
